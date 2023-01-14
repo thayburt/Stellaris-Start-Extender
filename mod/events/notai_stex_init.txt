@@ -1,0 +1,146 @@
+namespace = stex_init
+
+# this = country
+# Story Provider
+country_event = {
+	id = stex_init.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		is_ai = no
+	}
+	immediate = {
+		country_event = {
+			id = stex_init.1
+			days = @stex_starting_event_minimum_days
+			random = @stex_starting_event_variance_days
+		}
+	}
+}
+
+# this = country
+# Story Provider
+country_event = {
+	id = stex_init.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	# Trigger is provided via stex_init.0
+	immediate = { fire_on_action = { on_action = stex_on_empire_init_storyline } }
+}
+# this = country
+# Resource Provider
+country_event = {
+	id = stex_init.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	# No trigger in the event mods want to give a non plyable country resources
+	immediate = { fire_on_action = { on_action = stex_on_empire_init_add_resources } }
+}
+
+# this = country
+# Technology Provider
+country_event = {
+	id = stex_init.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = { fire_on_action = { on_action = stex_on_empire_init_technologies } }
+}
+
+# this = capital planet
+# Gatekeeper to manage the populator ordering
+planet_event = {
+	id = stex_init.4
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = { NOT = { has_planet_flag = stex_no_init_planet } }
+			clear_deposits = yes
+			fire_on_action = {
+				on_action = stex_on_capital_init_attempt_special
+				scopes = {
+					from = from
+					fromfrom = fromfrom
+				}
+			}
+			if = {
+				limit = { NOT = { stex_planet_is_init_trigger = yes } }
+				fire_on_action = {
+					on_action = stex_on_capital_init_attempt_origin
+					scopes = {
+						from = from
+						fromfrom = fromfrom
+					}
+				}
+				if = {
+					limit = { NOT = { stex_planet_is_init_trigger = yes } }
+					fire_on_action = {
+						on_action = stex_on_capital_init_attempt_civic
+						scopes = {
+							from = from
+							fromfrom = fromfrom
+						}
+					}
+					if = {
+						limit = { NOT = { stex_planet_is_init_trigger = yes } }
+						fire_on_action = {
+							on_action = stex_on_capital_init_attempt_random
+							scopes = {
+								from = from
+								fromfrom = fromfrom
+							}
+						}
+						if = {
+							limit = { stex_planet_is_init_trigger = yes }
+							set_planet_flag = stex_planet_init_random
+						}
+						else = { log_error = "Error occured when trying to init planet [This.GetName] deposits, planet not marked as populated after all passes." }
+					}
+					else = { set_planet_flag = stex_planet_init_civic }
+				}
+				else = { set_planet_flag = stex_planet_init_origin }
+				fire_on_action = {
+					on_action = stex_on_capital_init_always
+					scopes = {
+						from = from
+						fromfrom = fromfrom
+					}
+				}
+			}
+			else = { set_planet_flag = stex_planet_init_special }
+			stex_unmark_planet_as_init_effect = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_planet_flag = stex_no_init_planet }
+					AND = {
+						has_planet_flag = stex_no_init_planet
+						has_planet_flag = stex_populate_colony
+					}
+				}
+			}
+			fire_on_action = {
+				on_action = stex_on_capital_populate
+				scopes = {
+					from = from
+					fromfrom = fromfrom
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = stex_init.5
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = { fire_on_action = { on_action = stex_on_empire_init_ships } }
+}

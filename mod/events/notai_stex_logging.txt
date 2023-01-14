@@ -1,0 +1,1 @@
+namespace = stex_logging

@@ -1,0 +1,63 @@
+# Used to generate resources for empires
+namespace = stex_generate_resources
+
+# Adds starting energy
+country_event = {
+	id = stex_generate_resources.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { notai_is_playable_country_trigger = yes }
+	immediate = { add_resource = { energy = @stex_starting_energy } }
+}
+# Adds starting minerals
+country_event = {
+	id = stex_generate_resources.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { notai_is_playable_country_trigger = yes }
+	immediate = { add_resource = { minerals = @stex_starting_minerals } }
+}
+# Adds starting food
+country_event = {
+	id = stex_generate_resources.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { notai_is_playable_country_trigger = yes }
+	immediate = { add_resource = { food = @stex_starting_food } }
+}
+# Adds starting alloys
+country_event = {
+	id = stex_generate_resources.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { notai_is_playable_country_trigger = yes }
+	immediate = { add_resource = { alloys = @stex_starting_alloys } }
+}
+# Adds starting consumer goods
+country_event = {
+	id = stex_generate_resources.4
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		OR = {
+			is_gestalt = no
+			has_valid_civic = civic_machine_servitor
+		}
+	}
+	immediate = { add_resource = { consumer_goods = @stex_starting_consumer_goods } }
+}
+# Adds starting influence
+country_event = {
+	id = stex_generate_resources.5
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { notai_is_playable_country_trigger = yes }
+	immediate = { add_resource = { influence = @stex_starting_influence } }
+}

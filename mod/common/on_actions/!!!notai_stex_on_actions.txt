@@ -1,0 +1,118 @@
+### Contains STEX events hooked into STEX on actions
+# TODO DOC
+stex_on_empire_init_storyline = {
+	random_events = {
+		# Weights are handled by a weight_multiplier in the wrapper event
+		1 = stex_game_start_storylines.0 # No Storyline
+		1 = stex_game_start_storylines.1 # Wanderlust
+		1 = stex_game_start_storylines.2 # Mass Extinction
+		1 = stex_game_start_storylines.3 # Radical Cult
+		1 = stex_game_start_storylines.4 # Sublight Probes
+	}
+}
+# TODO DOC
+stex_on_empire_init_add_resources = {
+	events = {
+		stex_generate_resources.0				# Starting Energy
+		stex_generate_resources.1				# Starting Minerals
+		stex_generate_resources.2				# Starting Food
+		stex_generate_resources.3				# Starting Alloys
+		stex_generate_resources.4				# Starting Consumer Goods
+		stex_generate_resources.5				# Starting Influence
+	}
+}
+# TODO DOC
+stex_on_empire_init_technologies = {
+	events = {
+
+	}
+}
+# this = capital planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# 1st populator pass, place populators for special starting planets here
+stex_on_capital_init_attempt_special = {
+	random_events = {
+		1 = stex_game_start_generate.9		# Earth Populator
+	}
+}
+# this = captial planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# 2nd populator pass, place your origin specific populators here
+stex_on_capital_init_attempt_origin = {
+	random_events = {
+
+	}
+}
+# this = capital planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# 3rd populator pass, place civic specific populators (like Determine Exterminators) here
+stex_on_capital_init_attempt_civic = {
+	random_events = {
+	}
+}
+# this = capital planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# Last populator pass, place generic populators here
+stex_on_capital_init_attempt_random = {
+	random_events = {
+		1 = stex_game_start_generate.0			# Continental World
+		1 = stex_game_start_generate.1			# Tropical World
+		1 = stex_game_start_generate.2			# Ocean World
+		1 = stex_game_start_generate.3			# Arctic World
+		1 = stex_game_start_generate.4			# Tundra World
+		1 = stex_game_start_generate.5			# Alpine World
+		1 = stex_game_start_generate.6			# Desert World
+		1 = stex_game_start_generate.7			# Arid World
+		1 = stex_game_start_generate.8			# Savannah World
+	}
+}
+# this = capital planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# Always fires, useful for cases where a specific deposit or modifier should be added regardless of any special starting conditions
+stex_on_capital_init_always = {
+	events = {
+		# All guaranteed populators
+	}
+}
+# this = capital planet
+# from = founder species
+# fromfrom = secondary species(if any)
+# Always fires, used to build districts, buildings, and pops in the empire's capital world
+stex_on_capital_build = {
+	events = {
+		# Districts/Buildings
+	}
+}
+# TODO DOC
+# Always fires, used to spawn pops in the empire's capital world
+stex_on_capital_populate = {
+	events = {
+		# Pops
+	}
+}
+# TODO DOC
+# Always fires, used to create deposits and modifiers in the empire's capital system
+stex_on_capital_system_init = {
+	events = {
+
+	}
+}
+# TODO DOC
+# Always fires, used to build any space stations in the empire's capital system
+stex_on_capital_system_build = {
+	events = {
+
+	}
+}
+# this = country
+# Always fires, used to create any space ships in the system
+stex_on_empire_init_ships = {
+	events = {
+
+	}
+}

@@ -1,0 +1,9 @@
+stex_active_trigger = {
+	optimize_memory
+	always = yes
+}
+
+stex_planet_is_init_trigger = {
+	optimize_memory
+	has_planet_flag = stex_populator_int_planet_populated
+}

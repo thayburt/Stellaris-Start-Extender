@@ -1,0 +1,9 @@
+stex_mark_planet_as_init_effect = {
+	optimize_memory
+	set_planet_flag = stex_populator_int_planet_populated
+}
+
+stex_unmark_planet_as_init_effect = {
+	optimize_memory
+	remove_planet_flag = stex_populator_int_planet_populated
+}

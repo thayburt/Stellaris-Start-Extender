@@ -1,0 +1,13 @@
+@stex_starting_energy			= 100
+@stex_starting_minerals			= 100
+@stex_starting_food				= 100
+@stex_starting_alloys			= 100
+@stex_starting_consumer_goods	= 100
+@stex_starting_influence		= 100
+
+
+@stex_starting_event_minimum_days = 30
+@stex_starting_event_variance_days = 10
+@stex_starting_event_chance_low = 1
+@stex_starting_event_chance_mid = 10
+@stex_starting_event_chance_non = 69

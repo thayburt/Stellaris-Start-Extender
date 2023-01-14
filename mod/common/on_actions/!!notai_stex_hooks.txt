@@ -1,0 +1,58 @@
+# Contains STEX events hooked into vanilla/hardcoded logic
+# this = nothing (there is no scope)
+on_game_start = {
+	events = {
+		stex_game_start.0						# Chance to spawn sol if it does not already exist
+		stex_game_start.1						# Spawn the shroud country
+	}
+}
+# this = country
+on_game_start_country = {
+	events = {
+		stex_game_start.2						# Randomize maurader flag appropriately
+		stex_game_start.3						# Determines if the empire has a second lithoid or non lithoid species
+		stex_game_start_origins.0				# Scion Origin
+		stex_game_start_origins.1				# Hegemony and Common Ground Origins
+		stex_game_start_origins.2				# Doomsday Origin
+		stex_game_start_origins.3				# Slingshot to the Stars Origin
+		stex_game_start_origins.4				# Lost Colony Origin
+		stex_game_start_origins.5				# Galactic Doorstep Origin
+		stex_game_start_origins.6				# On the Shoulders of Giants Origin
+		stex_game_start_origins.7				# Here Be Dragons Origin
+		stex_game_start_origins.8				# Ocean Paradise Origin
+		stex_game_start_origins.9				# Teachers of the Shroud Origin
+		stex_game_start_origins.10				# Imperial Vassal Origin
+		stex_game_start_origins.11 				# Mechanists Origin
+		stex_game_start_origins.12				# Life Seeded Origin
+		# Fill in the rest of the origins here
+		stex_game_start_relationships.0			# Sets the Fallen ME to friendly with mining drones
+		stex_game_start_relationships.1			# Sets the Tiyanki to neutral with other wildlife
+		stex_game_start_relationships.2			# Sets Enclaves to friendly with Mauraders
+		stex_init.0 							# Choses a storyline for an empire to follow
+		stex_init.2								# Add resources to the country
+	}
+}
+
+# The following 3 are declared in order of execution
+# this = country
+empire_init_add_technologies = {
+	events = {
+		stex_init.3
+	}
+}
+
+# this = planet
+# from = founder species
+# fromfrom = secondary species (if exists)
+empire_init_capital_planet = {
+	events = {
+		stex_init.4
+	}
+}
+
+# this = country
+empire_init_create_ships = {
+	events = {
+		stex_init.5
+	}
+}

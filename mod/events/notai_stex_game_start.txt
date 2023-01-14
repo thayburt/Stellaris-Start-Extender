@@ -1,0 +1,665 @@
+namespace = stex_game_start
+
+# Chance to create sol if no sol has spawned
+event = {
+	id = stex_game_start.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { NOT = { any_system = { has_star_flag = sol } } }
+
+	immediate = {
+		random_list = {
+			50 = { }
+			40 = {
+				random_system = {
+					limit = { has_owner = no }
+					spawn_system = { initializer = "special_init_03" }
+				}
+				add_extra_hyperlane_to_spawned_system_effect = yes
+			}
+			10 = {
+				random_system = {
+					limit = { has_owner = no }
+					spawn_system = { initializer = "special_init_04" }
+				}
+				add_extra_hyperlane_to_spawned_system_effect = yes
+			}
+		}
+	}
+}
+# Spawns in the shroud country
+event = {
+	id = stex_game_start.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		create_country = {
+			name = "NAME_The_Shroud"
+			type = shroud
+			flag = {
+				icon = {
+					category = "special"
+					file = "the_shroud.dds"
+				}
+				background= {
+					category = "backgrounds"
+					file = "00_solid.dds"
+				}
+				colors={
+					"red"
+					"black"
+					"null"
+					"null"
+				}
+			}
+			effect = {
+				set_country_flag = suppress_first_contact_comms
+				save_global_event_target_as = shroud_contact_country
+			}
+		}
+	}
+}
+# Ensures all Marauders use the pirate flags
+country_event = {
+	id = stex_game_start.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_country_type = dormant_marauders }
+	immediate = { randomize_flag_symbol = "pirate" }
+}
+# Determines if a country needs to spawn additional districts for lithoids or farming
+country_event = {
+	id = stex_game_start.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_country_type = default }
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					has_valid_civic = civic_machine_assimilator
+					has_valid_civic = civic_machine_servitor
+					has_origin = origin_syncretic_evolution
+					has_origin = origin_necrophage
+				}
+			}
+			if = {
+				limit = { last_created_species = { is_lithoid = yes } }
+				set_country_flag = lithoid_subspecies
+			}
+			else = { set_country_flag = non_lithoid_subspecies }
+		}
+		else_if = {
+			limit = {
+				has_origin = origin_tree_of_life
+				is_lithoid_empire = yes
+			}
+			set_country_flag = non_lithoid_subspecies
+		}
+	}
+}
+
+# Used to set storylines that an empire will follow on game start
+namespace = stex_game_start_storylines
+
+# No story was chosen
+country_event = {
+	id = stex_game_start_storylines.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	weight_multiplier = {
+		base = 1
+		mult = @stex_starting_event_chance_non
+	}
+	immediate = { set_country_flag = starting_event }
+}
+# Wanderlust
+country_event = {
+	id = stex_game_start_storylines.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	weight_multiplier = {
+		base = 1
+		mult = @stex_starting_event_chance_low
+	}
+	immediate = { country_event = { id = country.1000 } }
+}
+# Mass Extinction
+country_event = {
+	id = stex_game_start_storylines.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	weight_multiplier = {
+		base = 1
+		mult = @stex_starting_event_chance_mid
+	}
+	immediate = { country_event = { id = country.1100 } }
+}
+# Radical Cult
+country_event = {
+	id = stex_game_start_storylines.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	weight_multiplier = {
+		base = 1
+		mult = @stex_starting_event_chance_mid
+	}
+	immediate = { country_event = { id = country.200 } }
+}
+# Sublight Probes
+country_event = {
+	id = stex_game_start_storylines.4
+	is_triggered_only = yes
+	hide_window = yes
+
+	weight_multiplier = {
+		base = 1
+		mult = @stex_starting_event_chance_mid
+	}
+	immediate = { country_event = { id = country.258 } }
+}
+
+# Used to set relationships between factions
+namespace = stex_game_start_relationships
+
+# Sets fallen machine empire to be friendly with the drones
+country_event = {
+	id = stex_game_start_relationships.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { has_country_flag = fallen_empire_machine }
+
+	immediate = {
+		every_country = {
+			limit = { is_drone_country_type = yes }
+			set_faction_hostility = {
+				target = prev
+				set_hostile = no
+				set_neutral = no
+				set_friendly = yes
+			}
+		}
+	}
+}
+# Sets Tiyanki to neutral with other wildlife
+country_event = {
+	id = stex_game_start_relationships.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_tiyanki_country_type = yes }
+
+	immediate = {
+		every_country = {
+			limit = {
+				OR = {
+					is_amoeba_country_type = yes
+					is_drone_country_type = yes
+					is_crystal_country_type = yes
+					is_country_type = cloud
+				}
+			}
+			set_faction_hostility = {
+				target = prev
+				set_hostile = no
+				set_neutral = yes
+				set_friendly = no
+			}
+		}
+	}
+}
+# Sets Mauraders to friendly with enclaves
+country_event = {
+	id = stex_game_start_relationships.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_country_type = enclave }
+	immediate = {
+		every_country = {
+			limit = { is_country_type = dormant_marauders }
+			set_faction_hostility = {
+				target = prev
+				set_hostile = no
+				set_neutral = no
+				set_friendly = yes
+			}
+		}
+	}
+}
+
+namespace = stex_game_start_origins
+
+# Scion Origin
+country_event = {
+	id = stex_game_start_origins.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_scion
+	}
+	immediate = { country_event = { id = origin.5 } }
+}
+# Hegemony and Common Ground Origins
+country_event = {
+	id = stex_game_start_origins.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		OR = {
+			has_origin = origin_common_ground
+			has_origin = origin_hegemon
+		}
+	}
+	immediate = { country_event = { id = origin.55 } }
+}
+# Doomsday Origin
+country_event = {
+	id = stex_game_start_origins.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_doomsday
+	}
+	immediate = { country_event = { id = origin.60 } }
+}
+# Slingshot to the Stars Origin
+country_event = {
+	id = stex_game_start_origins.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_star_slingshot
+	}
+	immediate = { country_event = { id = origin.3500 } }
+}
+# Lost Colony Origin
+country_event = {
+	id = stex_game_start_origins.4
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_lost_colony
+		NOT = { has_country_flag = human_2 }
+	}
+	immediate = {
+		if = {
+			limit = {
+				NOR = {
+					has_global_flag = stex_can_have_lost_colony_ai
+					has_global_flag = stex_not_have_lost_colony_ai
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						any_playable_country = {
+							has_origin = origin_lost_colony
+							is_ai = no
+						}
+						check_galaxy_setup_value = { setting = num_advanced_empires value > 0 }
+					}
+				}
+				set_global_flag = stex_can_have_lost_colony_ai
+			}
+			else = { set_global_flag = stex_not_have_lost_colony_ai }
+		}
+		if = {
+			limit = { has_global_flag = stex_can_have_lost_colony_ai }
+			country_event = { id = origin.100 }
+		}
+		else = {
+			log = "REMOVED LOST COLONY"
+			set_origin = origin_default
+		}
+	}
+}
+# Galactic Doorstep Origin
+country_event = {
+	id = stex_game_start_origins.5
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_galactic_doorstep
+	}
+	immediate = { country_event = { id = origin.1001 } }
+}
+# On the Shoulders of Giants Origin
+country_event = {
+	id = stex_game_start_origins.6
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_shoulders_of_giants
+	}
+	immediate = { country_event = { id = origin.1199 } }
+}
+# Here Be Dragons Origin
+country_event = {
+	id = stex_game_start_origins.7
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_here_be_dragons
+	}
+	immediate = { country_event = { id = aquatics.100 } }
+}
+# Ocean Paradise Origin
+country_event = {
+	id = stex_game_start_origins.8
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_ocean_paradise
+	}
+	immediate = { country_event = { id = aquatics.1000 } }
+}
+# Teachers of the Shroud Origin
+country_event = {
+	id = stex_game_start_origins.9
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		notai_is_playable_country_trigger = yes
+		has_origin = origin_shroudwalker_apprentice
+	}
+	immediate = { country_event = { id = origin.5600 } }
+}
+# Imperial Vassal Origin
+country_event = {
+	id = stex_game_start_origins.10
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { has_origin = origin_imperial_vassal }
+	immediate = {
+		if = {
+			limit = { NOT = { has_global_flag = stex_imperial_origin_start_effect_executed } }
+			imperial_origin_start_effect = yes
+			set_global_flag = stex_imperial_origin_start_effect_executed
+		}
+	}
+}
+# Mechanists Origin
+country_event = {
+	id = stex_game_start_origins.11
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { has_origin = origin_mechanists }
+	immediate = {
+		give_technology = { message = no tech = tech_powered_exoskeletons }
+		give_technology = { message = no tech = tech_robotic_workers }
+	}
+}
+# Life Seeded Origin
+country_event = {
+	id = stex_game_start_origins.12
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { has_origin = origin_life_seeded }
+	immediate = {
+		# Nuke other colonies gained from advanced empire, etc
+		every_owned_planet = {
+			limit = { is_capital = no }
+			remove_all_buildings = yes
+			destroy_colony = yes
+		}
+	}
+}
+
+# Clone Origin
+
+
+# Account for new origins
+
+# Events responsible for populating starting planets
+namespace = stex_game_start_generate
+
+# Continental World
+planet_event = {
+	id = stex_game_start_generate.0
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_continental }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_rushing_waterfalls
+		add_deposit = d_tempestous_mountain
+		add_deposit = d_veiny_cliffs
+		add_deposit = d_prosperous_mesa
+		add_deposit = d_rich_mountain
+		add_deposit = d_rugged_woods
+		add_deposit = d_fertile_lands
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Tropical World
+planet_event = {
+	id = stex_game_start_generate.1
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_tropical }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_rushing_waterfalls
+		add_deposit = d_tempestous_mountain
+		add_deposit = d_mineral_fields
+		add_deposit = d_prosperous_mesa
+		add_deposit = d_submerged_ore_veins
+		add_deposit = d_green_hills
+		add_deposit = d_lush_jungle
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Ocean World
+planet_event = {
+	id = stex_game_start_generate.2
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_ocean }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_rushing_waterfalls
+		add_deposit = d_underwater_vent
+		add_deposit = d_mineral_fields
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_submerged_ore_veins
+		add_deposit = d_green_hills
+		add_deposit = d_lush_jungle
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Arctic World
+planet_event = {
+	id = stex_game_start_generate.3
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_arctic }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_frozen_gas_lake
+		add_deposit = d_geothermal_vent
+		add_deposit = d_veiny_cliffs
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_rich_mountain
+		add_deposit = d_lichen_fields
+		add_deposit = d_fungal_caves
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Tundra World
+planet_event = {
+	id = stex_game_start_generate.4
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_tundra }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_frozen_gas_lake
+		add_deposit = d_geothermal_vent
+		add_deposit = d_mineral_fields
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_rich_mountain
+		add_deposit = d_forgiving_tundra
+		add_deposit = d_fungal_caves
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Alpine World
+planet_event = {
+	id = stex_game_start_generate.5
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_alpine }
+	immediate = {
+		add_deposit = d_hot_springs
+		add_deposit = d_frozen_gas_lake
+		add_deposit = d_tempestous_mountain
+		add_deposit = d_veiny_cliffs
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_rich_mountain
+		add_deposit = d_forgiving_tundra
+		add_deposit = d_fungal_caves
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Desert World
+planet_event = {
+	id = stex_game_start_generate.6
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_desert }
+	immediate = {
+		add_deposit = d_arid_highlands
+		add_deposit = d_searing_desert
+		add_deposit = d_geothermal_vent
+		add_deposit = d_mineral_fields
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_rich_mountain
+		add_deposit = d_nutritious_mudland
+		add_deposit = d_great_river
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Arid World
+planet_event = {
+	id = stex_game_start_generate.7
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_arid }
+	immediate = {
+		add_deposit = d_arid_highlands
+		add_deposit = d_searing_desert
+		add_deposit = d_geothermal_vent
+		add_deposit = d_veiny_cliffs
+		add_deposit = d_ore_rich_caverns
+		add_deposit = d_rich_mountain
+		add_deposit = d_bountiful_plains
+		add_deposit = d_great_river
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Savannah World
+planet_event = {
+	id = stex_game_start_generate.8
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = { is_planet_class = pc_savannah }
+	immediate = {
+		add_deposit = d_arid_highlands
+		add_deposit = d_searing_desert
+		add_deposit = d_geothermal_vent
+		add_deposit = d_mineral_fields
+		add_deposit = d_prosperous_mesa
+		add_deposit = d_submerged_ore_veins
+		add_deposit = d_bountiful_plains
+		add_deposit = d_fertile_lands
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+# Earth
+planet_event = {
+	id = stex_game_start_generate.9
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		has_planet_flag = planet_earth
+		# TODO Ensure that both spawn planets for shattered ring and remnants have the special spawn planet flag by this point
+		owner = {
+			NOR = {
+				has_origin = origin_shattered_ring
+				has_origin = origin_remnants
+			}
+		}
+	}
+	immediate = {
+		add_deposit = d_mesopotamian_urban_corridor
+		add_deposit = d_boswash_metropolitan_axis
+		add_deposit = d_mauritanian_security_zone
+		add_deposit = d_great_albertan_crater
+		add_deposit = d_scandinavian_reclamation_sector
+		add_deposit = d_saharan_irrigation_project
+		add_deposit = d_pearl_river_agglomerate
+		add_deposit = d_great_pacific_garbage_patch
+		add_deposit = d_failing_infrastructure_earth
+
+		# Keeping this here just cause it makes more sense for the time being
+		if = {
+			limit = { owner = { has_valid_civic = civic_machine_servitor } }
+			add_deposit = d_hot_springs
+			add_deposit = d_strip_mine
+			add_deposit = d_unsupervised_settlement
+		}
+		else = { add_deposit = d_decrepit_dwellings }
+		stex_mark_planet_as_init_effect = yes
+	}
+}
+
+### TODO: REWRITE POPULATOR
+# EVENTS MUST BE LINEAR (No conditions in effect code) IN REGARDS TO CIVICS, ORIGINS, AUTHORITIES, AND ETHICS
+# Prefer linear populators in regards to species types
+# Prioritise being general in event triggers
+# - Deposits + Blockers
+# - Modifiers
+# - Buildings
+# - Pops

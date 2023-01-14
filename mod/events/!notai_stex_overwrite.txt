@@ -1,0 +1,72 @@
+# overwriting various events to break them down into smaller components like they should be
+namespace = game_start
+
+event = {
+	id = game_start.1
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = { set_global_flag = game_started }
+}
+country_event = {
+	id = game_start.8
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {
+		# Others moved to own events, this is staying because this event is getting called anyways
+		if = {
+			limit = { has_civic = civic_corporate_dominion }
+			give_technology = { message = no tech = tech_space_trading }
+		}
+	}
+}
+planet_event = {
+	id = game_start.12
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {}
+}
+
+namespace = country
+# Early Game story chain gatekeeper (empty)
+country_event = {
+	id = country.900
+	is_triggered_only = yes
+	hide_window = yes
+	immediate = {}
+}
+# Mass Extinction overwrite, "because putting different triggers in different places is fun" - Paradox
+country_event = {
+	id = country.1100
+	title = "country.1100.name"
+	desc = "country.1100.desc"
+	show_sound = event_scanner
+	picture = GFX_evt_galactic_senate
+	location = root
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_ai = no
+		NOR = {
+			has_ethic = ethic_gestalt_consciousness
+			has_origin = origin_life_seeded
+			has_origin = origin_void_dwellers
+			has_origin = origin_shattered_ring
+			has_country_flag = starting_event
+		}
+	}
+
+	immediate = { set_country_flag = starting_event }
+
+	option = {
+		name = "country.1100.a"
+		begin_event_chain = {
+			event_chain = "mass_extinction_chain"
+			target = root
+		}
+		hidden_effect = { country_event = { id = country.1101 } }
+	}
+}
